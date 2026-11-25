@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>شفرة النيل</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3ead6;--card:#fffaf0;--tx:#1d2a3a;--mut:#6b6455;--gold:#b8860b;--lap:#1f4e8c;--ok:#1f7a4d;--bad:#b3392f;--ln:#d9c9a3;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1b2d;--card:#172640;--tx:#f2e8cf;--mut:#a9b3c4;--gold:#e0b84a;--lap:#6fa3e8;--ok:#4cc28a;--bad:#ef7a6f;--ln:#2c4268}}
+:root[data-theme="dark"]{--bg:#0f1b2d;--card:#172640;--tx:#f2e8cf;--mut:#a9b3c4;--gold:#e0b84a;--lap:#6fa3e8;--ok:#4cc28a;--bad:#ef7a6f;--ln:#2c4268}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:Cairo,Tahoma,sans-serif;line-height:1.7}
+#app{max-width:720px;margin:0 auto;padding:16px}
+h1{font-size:2.6rem;font-weight:900;margin:.2em 0;color:var(--gold);letter-spacing:0}
+.hg{font-family:'Noto Sans Egyptian Hieroglyphs','Segoe UI Historic','Segoe UI Symbol',sans-serif}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:700;color:var(--mut)}
+.card{background:var(--card);border:2px solid var(--ln);border-radius:14px;padding:16px;margin:12px 0}
+.case{display:flex;gap:14px;align-items:center;width:100%;text-align:right;font:inherit;color:inherit;cursor:pointer}
+.case:hover{border-color:var(--gold)}
+.case .ic{font-size:2.2rem}.case b{font-size:1.15rem}.case small{display:block;color:var(--mut)}
+.btn{background:var(--lap);color:#fff;border:0;border-radius:10px;padding:10px 18px;font:700 1rem Cairo,sans-serif;cursor:pointer}
+.btn.alt{background:transparent;color:var(--tx);border:2px solid var(--ln)}
+.opt{display:block;width:100%;text-align:right;background:var(--card);color:var(--tx);border:2px solid var(--ln);border-radius:10px;padding:12px;margin:8px 0;font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--lap)}
+.opt.g{border-color:var(--ok);background:rgba(76,194,138,.18)}.opt.b{border-color:var(--bad);background:rgba(239,122,111,.18)}
+.bar{height:8px;background:var(--ln);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--gold);width:100%}
+.fb{border-radius:12px;padding:12px;margin-top:12px;border:2px solid}.fb.g{border-color:var(--ok)}.fb.b{border-color:var(--bad)}
+.clue{padding:8px 12px;border-right:4px solid var(--gold);margin:6px 0;background:var(--card)}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{background:var(--card);border:2px solid var(--ln);border-radius:10px;padding:8px 12px;font:inherit;color:var(--tx);cursor:pointer}
+.chip.used{opacity:.35}
+.glyph{font-size:2.4rem;line-height:1.2}
+.key{display:flex;flex-direction:column;align-items:center;min-width:46px;font-size:.85rem;color:var(--mut)}
+.key span:first-child{font-size:1.8rem;color:var(--tx)}
+.seal{font-size:3rem}
+h2{margin:.2em 0 .6em;font-size:1.3rem}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tab{background:var(--card);color:var(--tx);border:2px solid var(--ln);border-radius:10px;padding:8px 14px;font:700 .95rem Cairo,sans-serif;cursor:pointer}
+.tab.active{background:var(--lap);color:#fff;border-color:var(--lap)}
+.info-item{border-bottom:1px solid var(--ln);padding:10px 0}.info-item:last-child{border:0}
+.badge{display:inline-block;background:rgba(184,134,11,.15);color:var(--gold);font-weight:700;font-size:.8rem;padding:2px 8px;border-radius:6px}
+.inp{width:100%;padding:12px;border-radius:10px;border:2px solid var(--ln);background:var(--bg);color:var(--tx);font:700 1.05rem Cairo,sans-serif}
+.cartouche{border:3px solid var(--gold);border-radius:999px;padding:14px 28px;display:inline-flex;gap:8px;background:rgba(184,134,11,.08);margin:14px 0;flex-wrap:wrap;justify-content:center;min-width:120px}
+.small-mut{color:var(--mut);font-size:.9rem}
+:root,:root:not([data-theme="light"]){--bg:#10002b;--card:#1d0b45;--tx:#fff4e0;--mut:#c9b8f0;--gold:#ffc300;--lap:#7b2ff7;--ok:#00e0a4;--bad:#ff4d6d;--ln:#4a2a8a}
+body{background:radial-gradient(circle at 15% 0,#3a0ca3 0,transparent 45%),radial-gradient(circle at 95% 15%,#f72585 0,transparent 32%),var(--bg);background-attachment:fixed}
+h1{background:linear-gradient(90deg,#ffc300,#ff4d6d,#f72585);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{background:linear-gradient(135deg,#f72585,#7b2ff7);box-shadow:0 4px 0 #3a0ca3;transition:transform .1s}.btn:active{transform:translateY(3px);box-shadow:none}
+.tab.active{background:linear-gradient(135deg,#ffc300,#ff4d6d);color:#1a0033;border-color:transparent}
+.case:hover,.opt:hover:not(:disabled){border-color:#ffc300;box-shadow:0 0 14px rgba(255,195,0,.45)}
+.lang{background:var(--card);color:var(--tx);border:2px solid var(--ln);border-radius:10px;padding:8px;font:700 .9rem Cairo,sans-serif}
+.gen{border:2px solid var(--c);border-right-width:8px;border-radius:12px;margin:10px 0;background:var(--card)}
+.gen summary{padding:12px 14px;cursor:pointer;font-size:1.05rem}.gen .gb{padding:0 14px 14px}
+.chip2{display:inline-block;background:var(--c);color:#14002e;font-weight:700;border-radius:999px;padding:3px 12px;margin:3px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);margin-inline-end:6px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const MAP={ا:'𓄿',ب:'𓃀',ت:'𓏏',ر:'𓂋',ص:'𓋴',ك:'𓎡',ل:'𓃭',م:'𓅓',ن:'𓈖',ي:'𓇋'};
+const CASES=[
+{id:'a',ic:'🏺',t:'القضية الأولى: آثار مصر',d:'من الأهرامات إلى الجوامع والكنائس',q:[
+{k:'clue',c:['بُني قبل نحو 4500 سنة','ظل أطول بناء صنعه الإنسان قرابة 3800 سنة','يقع في الجيزة'],o:['هرم خوفو','هرم زوسر','معبد الأقصر','قلعة صلاح الدين'],a:0,e:'هرم خوفو هو الهرم الأكبر في الجيزة، وهو من عجائب الدنيا السبع القديمة.'},
+{k:'mc',q:'قلعة قايتباي بالإسكندرية بُنيت في موقع أي معلم قديم؟',o:['منارة الإسكندرية','معبد دندرة','هرم ميدوم','معبد أبو سمبل'],a:0,e:'بُنيت القلعة في القرن الخامس عشر على موقع منارة الإسكندرية من العصر اليوناني الروماني.'},
+{k:'mc',q:'إلى أي عصر تنتمي الكنيسة المعلقة بمصر القديمة؟',o:['الفرعوني','القبطي','الحديث','اليوناني'],a:1,e:'الكنيسة المعلقة من أشهر الكنائس القبطية في القاهرة.'},
+{k:'mc',q:'أين يقع المتحف القومي للحضارة المصرية؟',o:['الأقصر','أسوان','الفسطاط بالقاهرة','الإسكندرية'],a:2,e:'يقع في الفسطاط، وفيه قاعة المومياوات الملكية.'},
+{k:'order',q:'رتّب العصور من الأقدم إلى الأحدث:',items:['الفرعوني','اليوناني الروماني','القبطي','الإسلامي'],e:'الفرعوني ثم اليوناني الروماني ثم القبطي ثم الإسلامي.'}]},
+{id:'b',ic:'🏙️',t:'القضية الثانية: المدن الجديدة',d:'أجيال العمران من الأول إلى الرابع',q:[
+{k:'mc',q:'العاصمة الإدارية الجديدة من أي جيل من المدن؟',o:['الأول','الثاني','الثالث','الرابع'],a:3,e:'تُصنَّف ضمن مدن الجيل الرابع.'},
+{k:'mc',q:'العلمين الجديدة تقع على ساحل أي بحر؟',o:['الأحمر','المتوسط','قناة السويس','بحيرة ناصر'],a:1,e:'تقع على الساحل الشمالي الغربي على البحر المتوسط.'},
+{k:'mc',q:'المنصورة الجديدة تتبع أي محافظة؟',o:['الدقهلية','أسوان','المنيا','الإسماعيلية'],a:0,e:'تتبع الدقهلية وتطل على البحر المتوسط.'},
+{k:'clue',c:['من مدن الجيل الأول','تقع في محافظة الشرقية','اسمها يذكّر بحرب 1973'],o:['العاشر من رمضان','السادس من أكتوبر','الشروق','بدر'],a:0,e:'مدينة العاشر من رمضان من أولى المدن الصناعية الجديدة.'},
+{k:'mc',q:'مدينة الجلالة الجديدة تطل على أي ساحل؟',o:['المتوسط','الأحمر (خليج السويس)','النيل','بحيرة قارون'],a:1,e:'تقع فوق هضبة الجلالة وتطل على خليج السويس.'}]},
+{id:'c',ic:'🏛️',t:'القضية الثالثة: رؤساء الجمهورية',d:'من محمد نجيب إلى عبد الفتاح السيسي',q:[
+{k:'order',q:'رتّب الرؤساء حسب تولّيهم الحكم:',items:['محمد نجيب','جمال عبد الناصر','أنور السادات','حسني مبارك','عبد الفتاح السيسي'],e:'نجيب (1953) ثم ناصر ثم السادات ثم مبارك ثم السيسي.'},
+{k:'mc',q:'من أول رئيس لجمهورية مصر بعد إعلانها عام 1953؟',o:['محمد نجيب','جمال عبد الناصر','أنور السادات','حسني مبارك'],a:0,e:'محمد نجيب هو أول رئيس للجمهورية.'},
+{k:'mc',q:'في عهد من وقعت حرب أكتوبر 1973؟',o:['عبد الناصر','السادات','مبارك','نجيب'],a:1,e:'حدث العبور في عهد الرئيس أنور السادات.'},
+{k:'mc',q:'من الرئيس الذي أمّم قناة السويس عام 1956؟',o:['جمال عبد الناصر','حسني مبارك','محمد نجيب','السادات'],a:0,e:'أعلن عبد الناصر تأميم القناة في يوليو 1956.'},
+{k:'mc',q:'مدة حكم حسني مبارك التقريبية؟',o:['10 سنوات','20 سنة','30 سنة','45 سنة'],a:2,e:'من 1981 إلى 2011 تقريباً.'}]},
+{id:'d',ic:'𓂀',t:'القضية الرابعة: شفرة الهيروغليفية',d:'فك الرموز لفتح الخزانة الأخيرة',q:[
+{k:'hiero',w:'نيل',e:'نيل: شريان الحياة في مصر.'},
+{k:'hiero',w:'مصر',e:'مصر: أرض الحضارة.'},
+{k:'hiero',w:'ملك',e:'ملك: كان يُكتب اسمه داخل خرطوش.'},
+{k:'hiero',w:'كتاب',e:'كتاب: الكتبة كانوا من أهم الطبقات في مصر القديمة.'},
+{k:'mc',q:'ما اسم الإطار البيضاوي الذي يحيط باسم الملك في الكتابة الهيروغليفية؟',o:['الخرطوش','المسلة','التابوت','الصولجان'],a:0,e:'الخرطوش يحمي اسم الملك.'}]}
+];
+const LV=[[0,'متدرب'],[400,'باحث آثار'],[900,'محقق أثري'],[1400,'كبير المحققين']];
+let S={score:0,seals:{},c:null,i:0,ok:0,left:30,lock:false,cl:1,tm:null,pick:[]};
+const $=s=>document.querySelector(s);
+const sh=a=>[...a].sort(()=>Math.random()-.5);
+const lvl=()=>LV.filter(l=>S.score>=l[0]).pop()[1];
+const bar=()=>`<div class="top"><span>🏅 ${lvl()}</span><span>⭐ ${S.score}</span></div>`;
+function homeBase(){
+ clearInterval(S.tm);
+ const done=Object.keys(S.seals).length>=4;
+ $('#app').innerHTML=bar()+`<h1>شفرة النيل <span class="hg">𓂀</span></h1>
+ <p>سُرقت شفرة النيل من القاهرة الخفية! اكشف الخيوط في أربع قضايا قبل أن تهرب العصابة.</p>`+
+ CASES.map(c=>`<button class="card case" onclick="start('${c.id}')"><span class="ic hg">${c.ic}</span><span><b>${c.t}</b><small>${c.d}</small></span><span class="seal" style="margin-right:auto;font-size:1.8rem">${S.seals[c.id]||''}</span></button>`).join('')+
+ (done?`<div class="card"><b>🎉 حللت اللغز!</b><p>وصلت إلى لقب «${lvl()}» بمجموع ${S.score} نقطة. أعد المحاولة لتحصل على أختام أعلى.</p></div>`:'');
+}
+function start(id){S.c=CASES.find(x=>x.id==id);S.i=0;S.ok=0;ask();}
+function ask(){
+ if(S.i>=S.c.q.length)return end();
+ const q=S.c.q[S.i];S.lock=false;S.cl=1;S.left=30;S.pick=[];
+ let body='';
+ if(q.k=='mc'||q.k=='clue'){
+  S.opts=sh(q.o.map((t,i)=>[t,i]));
+  body=(q.k=='clue'?'<p>🔍 اكشف الخيوط لتحدد المكان:</p><div id="clues"></div><button class="btn alt" id="more" onclick="more()">اكشف خيطاً آخر (−40 نقطة)</button>':`<h2>${q.q}</h2>`)+
+   S.opts.map((o,j)=>`<button class="opt" onclick="pickOpt(${j})">${o[0]}</button>`).join('');
+ }else if(q.k=='order'){
+  S.opts=sh(q.items);
+  body=`<h2>${q.q}</h2><div class="row" id="ch"></div><div class="row" id="pl"></div><div class="row"><button class="btn alt" onclick="S.pick.pop();drawOrder()">تراجع</button><button class="btn" onclick="chkOrder()">تأكيد الترتيب</button></div>`;
+ }else{
+  body=`<h2>فك الشفرة: ما الكلمة المخفية؟</h2><div class="row hg glyph">${[...q.w].map(l=>MAP[l]).join(' ')}</div>
+  <div class="row">${Object.entries(MAP).map(([l,g])=>`<div class="key"><span class="hg">${g}</span><span>${l}</span></div>`).join('')}</div>
+  <div class="card glyph" id="ans" style="min-height:3rem">&nbsp;</div>
+  <div class="row">${Object.keys(MAP).map(l=>`<button class="chip" onclick="addL('${l}')">${l}</button>`).join('')}</div>
+  <div class="row"><button class="btn alt" onclick="S.pick.pop();drawH()">مسح حرف</button><button class="btn" onclick="chkH()">افتح الخزانة</button></div>`;
+ }
+ $('#app').innerHTML=bar()+`<div class="card"><div class="top"><span>${S.c.t.split(':')[1]}</span><span>سؤال ${S.i+1}/${S.c.q.length}</span></div><div class="bar" style="margin:8px 0"><i id="tb"></i></div>${body}<div id="fb"></div></div>`;
+ if(q.k=='clue')drawClues();if(q.k=='order')drawOrder();
+ clearInterval(S.tm);S.tm=setInterval(()=>{S.left-=.25;$('#tb').style.width=Math.max(S.left/30*100,0)+'%';if(S.left<=0)done(false);},250);
+}
+function drawClues(){const q=S.c.q[S.i];$('#clues').innerHTML=q.c.slice(0,S.cl).map(x=>`<div class="clue">${x}</div>`).join('');if(S.cl>=q.c.length)$('#more').style.display='none';}
+function more(){if(!S.lock){S.cl++;drawClues();}}
+function pickOpt(j){if(S.lock)return;const q=S.c.q[S.i];const ok=S.opts[j][1]==q.a;
+ document.querySelectorAll('.opt').forEach((b,n)=>{b.disabled=true;if(S.opts[n][1]==q.a)b.classList.add('g');});
+ if(!ok)document.querySelectorAll('.opt')[j].classList.add('b');done(ok);}
+function drawOrder(){$('#ch').innerHTML=S.opts.map((t,i)=>`<button class="chip ${S.pick.includes(t)?'used':''}" onclick="addO('${t}')">${t}</button>`).join('');
+ $('#pl').innerHTML=S.pick.map((t,i)=>`<span class="chip">${i+1}. ${t}</span>`).join('');}
+function addO(t){if(!S.lock&&!S.pick.includes(t)){S.pick.push(t);drawOrder();}}
+function chkOrder(){const q=S.c.q[S.i];if(S.pick.length<q.items.length||S.lock)return;done(S.pick.join()==q.items.join());}
+function drawH(){$('#ans').innerHTML=S.pick.map(l=>`<span class="hg">${MAP[l]}</span>`).join(' ')+' <small>'+S.pick.join('')+'</small>';}
+function addL(l){if(!S.lock){S.pick.push(l);drawH();}}
+function chkH(){if(!S.lock)done(S.pick.join('')==S.c.q[S.i].w);}
+function done(ok){if(S.lock)return;S.lock=true;clearInterval(S.tm);const q=S.c.q[S.i];
+ const base=q.k=='clue'?160-(S.cl-1)*40:q.k=='mc'?100:150;
+ const pts=ok?base+Math.ceil(S.left/3):0;S.score+=pts;S.ok+=ok?1:0;
+ const last=S.i==S.c.q.length-1;
+ $('#fb').innerHTML=`<div class="fb ${ok?'g':'b'}"><b>${ok?'أحسنت! +'+pts+' نقطة':(S.left<=0?'انتهى الوقت!':'ليس تماماً')}</b><p>${q.e}</p><button class="btn" onclick="S.i++;ask()">${last?'النتيجة':'التالي'}</button></div>`;}
+function end(){const p=S.ok/S.c.q.length;const s=p>=.8?'🥇':p>=.5?'🥈':'🥉';
+ if(!S.seals[S.c.id]||['🥉','🥈','🥇'].indexOf(s)>['🥉','🥈','🥇'].indexOf(S.seals[S.c.id]))S.seals[S.c.id]=s;
+ $('#app').innerHTML=bar()+`<div class="card" style="text-align:center"><div class="seal">${s}</div><h2>ختم محقق أثري</h2><p>أجبت صح عن ${S.ok} من ${S.c.q.length}. مستواك الآن: ${lvl()}</p><button class="btn" onclick="home()">العودة للقضايا</button> <button class="btn alt" onclick="start('${S.c.id}')">إعادة القضية</button></div>`;}
+const FMAP={'ا':'𓄿','أ':'𓄿','إ':'𓄿','آ':'𓄿','ى':'𓇋','ي':'𓇋','ب':'𓃀','ت':'𓏏','ث':'𓍿','ج':'𓆓','ح':'𓎛','خ':'𓐍','د':'𓂧','ذ':'𓊨','ر':'𓂋','ز':'𓊃','س':'𓋴','ش':'𓈙','ص':'𓋴','ض':'𓂧','ط':'𓏏','ظ':'𓊨','ع':'𓂝','غ':'𓌅','ف':'𓆑','ق':'𓈎','ك':'𓎡','ل':'𓃭','م':'𓅓','ن':'𓈖','ه':'𓉔','و':'𓅱'};
+const PRES=[['محمد نجيب','يونيو 1953 – نوفمبر 1954','نحو سنة ونصف','أول رئيس للجمهورية بعد إعلانها.'],['جمال عبد الناصر','1956 – 1970','نحو 14 سنة','تأميم قناة السويس وبناء السد العالي.'],['أنور السادات','1970 – 1981','نحو 11 سنة','حرب أكتوبر 1973 ومعاهدة السلام.'],['حسني مبارك','1981 – 2011','نحو 29 سنة','أطول فترة حكم في العصر الجمهوري.'],['محمد مرسي','2012 – 2013','نحو سنة','تولى بعد انتخابات 2012.'],['عدلي منصور (مؤقت)','2013 – 2014','نحو 11 شهراً','قاد المرحلة الانتقالية.'],['عبد الفتاح السيسي','من 2014','أكثر من 12 سنة','مدن الجيل الرابع والمشروعات القومية والمتاحف الكبرى.']];
+const CIT=[['الجيل الأول','العاشر من رمضان، 15 مايو، السادات، السادس من أكتوبر'],['الجيل الثاني','العبور، بدر، الشيخ زايد، النوبارية الجديدة، بني سويف الجديدة، المنيا الجديدة'],['الجيل الثالث','القاهرة الجديدة، الشروق، أسيوط الجديدة، سوهاج الجديدة، قنا الجديدة، أسوان الجديدة'],['الجيل الرابع','العاصمة الإدارية الجديدة، العلمين الجديدة، المنصورة الجديدة، الجلالة، أخميم الجديدة']];
+const ANT=[['الفرعوني','الأهرامات والمعابد والمقابر والتماثيل والبرديات.'],['اليوناني الروماني والقبطي','الإسكندرية القديمة، والكنائس والأديرة مثل الكنيسة المعلقة.'],['الإسلامي','المساجد والقلاع مثل قلعة صلاح الدين والمدارس الأثرية.'],['المتاحف والمعالم الحديثة','المتحف المصري الكبير والمتحف القومي للحضارة المصرية.']];
+const GL=[['𓋹','عنخ','رمز الحياة'],['𓂀','عين حورس','الحماية والشفاء'],['𓆣','الجعران','البعث والتجدد'],['𓊽','عمود الدجد','الثبات والاستقرار'],['𓇳','قرص الشمس','الشمس والإله رع'],['𓅓','البومة','الصوت م'],['𓈖','الماء','الصوت ن'],['𓂋','الفم','الصوت ر']];
+const nav=()=>`<div class="nav">${[['game','🕵️ المغامرة'],['info','📚 الموسوعة'],['name','𓏏 اسمك بالهيروغليفية']].map(([k,t])=>`<button class="tab ${S.tab==k?'active':''}" onclick="goTab('${k}')">${t}</button>`).join('')}</div>`;
+const foot=()=>`<p class="small-mut" style="text-align:center;margin-top:24px">إعداد: جنى أحمد محمود عبدالرحيم عبدالله<br>جائزة الدولة للمبدع الصغير (CKP) — الهوية المصرية والصناعات الثقافية</p>`;
+function shell(h){clearInterval(S.tm);$('#app').innerHTML=bar()+`<h1>شفرة النيل <span class="hg">𓂀</span></h1>`+nav()+h+foot();}
+function goTab(t){S.tab=t;t=='game'?home():t=='info'?info():t=='why'||t=='vision'?about(t):nameP();}
+function home(){S.tab='game';homeBase();$('#app h1').insertAdjacentHTML('afterend',nav());$('#app').insertAdjacentHTML('beforeend',foot());}
+function info(s){S.tab='info';s=s||S.sec||'p';S.sec=s;
+ const R={p:PRES.map(p=>`<div class="info-item"><span class="badge">${p[2]}</span><div><b>${p[0]}</b> <span class="small-mut">(${p[1]})</span></div><p>${p[3]}</p></div>`),
+ c:CIT.map(p=>`<div class="info-item"><span class="badge">${p[0]}</span><p>${p[1]}</p></div>`).concat(['<p class="small-mut">التصنيف تقريبي، وتختلف بعض المصادر في أجيال مدن مثل بدر والشيخ زايد.</p>']),
+ a:ANT.map(p=>`<div class="info-item"><span class="badge">${p[0]}</span><p>${p[1]}</p></div>`),
+ g:GL.map(p=>`<div class="info-item" style="display:flex;gap:14px;align-items:center"><span class="hg" style="font-size:2.2rem">${p[0]}</span><div><b>${p[1]}</b> — ${p[2]}</div></div>`)};
+ const T={p:'🏛️ الرؤساء',c:'🏙️ المدن',a:'🏺 العصور',g:'𓋹 الرموز'};
+ shell(`<div class="card"><div class="row">${Object.keys(T).map(k=>`<button class="tab ${s==k?'active':''}" onclick="info('${k}')">${T[k]}</button>`).join('')}</div>${R[s].join('')}</div>`);}
+function nameP(){S.tab='name';shell(`<div class="card"><h2>اكتب اسمك بالهيروغليفية</h2><p class="small-mut">تقريب صوتي للتعلّم والتسلية، وليس ترجمة علمية دقيقة.</p><input class="inp" id="ni" maxlength="30" placeholder="مثال: سلمى" oninput="upName(this.value)"><div style="text-align:center"><div class="cartouche" id="car"></div></div><div class="row" id="ks"></div><div class="row"><button class="btn" onclick="cp()">📋 نسخ الرموز</button><button class="btn alt" onclick="$('#ni').value='';upName('')">مسح</button></div><div id="cm" class="small-mut"></div></div>`);$('#ni').value=S.name||'';upName(S.name||'');}
+function upName(v){S.name=v;const a=[...v].filter(c=>FMAP[c]||c==' ');
+ $('#car').innerHTML=a.some(c=>c!=' ')?a.map(c=>c==' '?'<span style="width:12px"></span>':`<span class="hg glyph">${FMAP[c]}</span>`).join(''):'<span class="small-mut">اكتب اسمك لتظهر الرموز</span>';
+ $('#ks').innerHTML=a.filter(c=>c!=' ').map(c=>`<div class="key"><span class="hg">${FMAP[c]}</span><span>${c}</span></div>`).join('');}
+function cp(){const t=[...S.name].filter(c=>FMAP[c]).map(c=>FMAP[c]).join('');try{navigator.clipboard.writeText(t).then(()=>{$('#cm').textContent='تم النسخ!'},()=>{$('#cm').textContent=t});}catch(e){$('#cm').textContent=t;}}
+PRES.length=0;PRES.push(
+['محمد نجيب','1953 – 1954','نحو سنة ونصف','أول رئيس للجمهورية؛ شارك في ثورة 23 يوليو 1952، وأُعلنت الجمهورية في 18 يونيو 1953 وصدر في عهده قانون الإصلاح الزراعي.'],
+['جمال عبد الناصر','1956 – 1970','نحو 14 سنة','أمّم قناة السويس 1956، وبنى السد العالي، وأقام مصنع الحديد والصلب بحلوان ومجمع الألومنيوم بنجع حمادي، ووسّع مجانية التعليم، وقامت الوحدة مع سوريا 1958.'],
+['أنور السادات','1970 – 1981','نحو 11 سنة','قاد حرب أكتوبر 1973، وزار القدس 1977، ووقّع كامب ديفيد 1978 ومعاهدة السلام 1979، وأطلق سياسة الانفتاح الاقتصادي واغتيل في 6 أكتوبر 1981.'],
+['حسني مبارك','1981 – 2011','نحو 29 سنة','استكمل استرداد الأرض بعودة طابا 1989، وافتُتح مترو الأنفاق 1987 ومكتبة الإسكندرية 2002، وتوسعت الطرق والاتصالات ومدن الجيلين الثاني والثالث.'],
+['محمد مرسي','2012 – 2013','نحو سنة','أول رئيس مدني منتخب بعد ثورة يناير، وصدر دستور 2012 في عهده.'],
+['عدلي منصور (مؤقت)','2013 – 2014','نحو 11 شهراً','رئيس المحكمة الدستورية العليا، قاد المرحلة الانتقالية وصدر دستور 2014 في عهده.'],
+['عبد الفتاح السيسي','من 2014','أكثر من 12 سنة','قناة السويس الجديدة 2015، والعاصمة الإدارية ومدن الجيل الرابع، وشبكة الطرق القومية، والمتحف المصري الكبير، ومشروع الضبعة النووي.']);
+const CIT2=[['الجيل الأول','السبعينيات وأوائل الثمانينيات','#ff9f1c','🚀','العاشر من رمضان|15 مايو|6 أكتوبر|السادات|برج العرب الجديدة|الصالحية الجديدة|دمياط الجديدة'],
+['الجيل الثاني','الثمانينيات والتسعينيات','#2ec4b6','🏭','بدر|العبور|بني سويف الجديدة|المنيا الجديدة|النوبارية الجديدة|الشيخ زايد'],
+['الجيل الثالث','التسعينيات وبداية الألفية','#a06cd5','🌆','الشروق|القاهرة الجديدة|أسيوط الجديدة|طيبة الجديدة|سوهاج الجديدة|أسوان الجديدة|قنا الجديدة|الفيوم الجديدة|أخميم الجديدة'],
+['الجيل الرابع (الأحدث)','المدن الذكية والمستدامة','#ff4d6d','🛰️','العاصمة الإدارية الجديدة|العلمين الجديدة|المنصورة الجديدة|6 أكتوبر الجديدة|حدائق أكتوبر|العبور الجديدة|سفنكس الجديدة|حدائق العاصمة|امتداد الشيخ زايد|سلام شرق بورسعيد|الإسماعيلية الجديدة|السويس الجديدة|رشيد الجديدة|ناصر الجديدة (غرب أسيوط)|غرب قنا|ملوي الجديدة|الفشن الجديدة|الأقصر الجديدة|توشكى الجديدة']];
+const F='#ffc300',G='#a06cd5',K='#00c2a8',I='#2ecc71',M='#ff4d6d';
+const ANT2=[
+['الهرم الأكبر (الجيزة)','الملك خوفو – الأسرة الرابعة','ارتفاعه الأصلي نحو 146م، وهو أكبر أهرامات الجيزة وأقدم عجائب الدنيا السبع.',F],
+['أبو الهول','يُنسب لعهد الملك خفرع','تمثال منحوت في الصخر برأس إنسان وجسد أسد يحرس هضبة الجيزة.',F],
+['هرم زوسر المدرج (سقارة)','الملك زوسر والمهندس إيمحتب – الأسرة الثالثة','أول بناء حجري ضخم في التاريخ.',F],
+['الهرم المنحني (دهشور)','الملك سنفرو – الأسرة الرابعة','تغيّرت زاوية ميله أثناء البناء فاكتسب شكله الفريد.',F],
+['معابد الكرنك (الأقصر)','ملوك كثيرون على مدى نحو ألفي عام، منهم تحتمس الأول وسيتي الأول ورمسيس الثاني','أكبر مجمع ديني قديم، وفيه قاعة الأعمدة الشهيرة.',F],
+['معبد حتشبسوت (الدير البحري)','الملكة حتشبسوت – الأسرة 18','مدرجات متتالية نُحتت عند سفح الجبل، وصمّمه المهندس سننموت.',F],
+['معبدا أبو سمبل (أسوان)','الملك رمسيس الثاني – الأسرة 19','نُقلا في الستينيات لإنقاذهما من مياه السد العالي.',F],
+['معبد أبيدوس','الملك سيتي الأول وأتمّه رمسيس الثاني','يضم قائمة الملوك الشهيرة.',F],
+['تل العمارنة (المنيا)','الملك إخناتون – الأسرة 18','عاصمة جديدة بنيت لعبادة الإله آتون.',F],
+['وادي الملوك (الأقصر)','ملوك الدولة الحديثة','مقابر ملكية منحوتة في الجبل، ومنها مقبرة توت عنخ آمون التي كشفها هوارد كارتر 1922.',F],
+['معبدا دندرة وإدفو وكوم أمبو','ملوك البطالمة ثم الرومان','معابد لحتحور وحورس وسوبك؛ ومعبد إدفو من أفضل المعابد حفظاً.',G],
+['معبد فيلة (أسوان)','البطالمة والرومان','مخصص للإلهة إيزيس، ونُقل إلى جزيرة أجيليكا بعد السد العالي.',G],
+['عمود السواري (الإسكندرية)','العصر الروماني','عمود من الجرانيت الأحمر يرتفع قرب موقع السرابيوم القديم.',G],
+['مقابر كوم الشقافة','العصر الروماني (القرنان الأول والثاني الميلاديان)','مقابر منحوتة في الصخر تمزج بين الفن المصري والروماني.',G],
+['الكنيسة المعلقة (مصر القديمة)','الطائفة القبطية','تقوم فوق أبراج حصن بابليون، وهي من أشهر كنائس مصر.',K],
+['دير سانت كاترين (سيناء)','الإمبراطور جستنيان – القرن السادس','من أقدم الأديرة العامرة في العالم.',K],
+['جامع عمرو بن العاص','القائد عمرو بن العاص – سنة 641م','أول مسجد بُني في مصر.',I],
+['جامع أحمد بن طولون','أحمد بن طولون – 876 إلى 879م','يتميز بمئذنته الملوية وساحته الواسعة.',I],
+['الجامع الأزهر','الفاطميون بقيادة جوهر الصقلي – 970م','مسجد وجامعة من أقدم الجامعات في العالم.',I],
+['قلعة صلاح الدين (القاهرة)','صلاح الدين الأيوبي – 1176م','قلعة حصينة على جبل المقطم حكم منها حكام مصر قروناً.',I],
+['مسجد ومدرسة السلطان حسن','السلطان حسن المملوكي – 1356م','من أعظم عمائر العصر المملوكي.',I],
+['قلعة قايتباي (الإسكندرية)','السلطان قايتباي – حوالي 1477م','بُنيت على موقع منارة الإسكندرية القديمة.',I],
+['المتحف المصري الكبير','الدولة المصرية الحديثة','قرب أهرامات الجيزة، وهو من أكبر المتاحف الأثرية لحضارة واحدة.',M],
+['المتحف القومي للحضارة المصرية','الدولة المصرية الحديثة','في الفسطاط، ونُقلت إليه المومياوات الملكية في موكب مهيب عام 2021.',M]];
+const STL=[
+['حجر رشيد','المتحف البريطاني – لندن','عثرت عليه الحملة الفرنسية عام 1799، وانتقل إلى البريطانيين بعد 1801، وبه فُكّت رموز الهيروغليفية.'],
+['تمثال نفرتيتي','متحف برلين الجديد – ألمانيا','خرج من مصر عام 1912 بعد حفائر لودفيج بورشاردت، ومصر تطالب بعودته.'],
+['قبة دندرة الفلكية (الزودياك)','متحف اللوفر – باريس','انتُزعت من سقف معبد دندرة عام 1821.'],
+['تمثال حم إيونو','متحف هيلدسهايم – ألمانيا','تمثال مهندس الهرم الأكبر، اكتُشف عام 1912.'],
+['بردية آني (كتاب الموتى)','المتحف البريطاني – لندن','حصل عليها واليس بدج في الأقصر عام 1888.'],
+['تمثال الكاتب المصري','متحف اللوفر – باريس','اكتُشف في سقارة عام 1850.'],
+['المسلات المصرية في العالم','باريس ولندن ونيويورك وإسطنبول وروما','مسلة الأقصر في ميدان الكونكورد، ومسلتا كليوباترا في لندن ونيويورك، ومسلة تحتمس الثالث في إسطنبول، وفي روما 13 مسلة.']];
+const LG={ar:['العربية','🕵️ المغامرة','📚 الموسوعة','𓏏 اسمك','🏛️ الرؤساء','🏙️ المدن','🏺 الآثار','🧳 المهرَّبات','𓋹 الرموز','إعداد',''],
+en:['English','🕵️ Adventure','📚 Encyclopedia','𓏏 Your name','🏛️ Presidents','🏙️ Cities','🏺 Monuments','🧳 Lost treasures','𓋹 Symbols','Created by','Interface translated; encyclopedia and quiz content are in Arabic.'],
+fr:['Français','🕵️ Aventure','📚 Encyclopédie','𓏏 Ton nom','🏛️ Présidents','🏙️ Villes','🏺 Monuments','🧳 Trésors perdus','𓋹 Symboles','Réalisé par','Interface traduite ; le contenu est en arabe.'],
+es:['Español','🕵️ Aventura','📚 Enciclopedia','𓏏 Tu nombre','🏛️ Presidentes','🏙️ Ciudades','🏺 Monumentos','🧳 Tesoros perdidos','𓋹 Símbolos','Creado por','Interfaz traducida; el contenido está en árabe.'],
+de:['Deutsch','🕵️ Abenteuer','📚 Lexikon','𓏏 Dein Name','🏛️ Präsidenten','🏙️ Städte','🏺 Denkmäler','🧳 Verlorene Schätze','𓋹 Symbole','Erstellt von','Oberfläche übersetzt; Inhalte sind auf Arabisch.'],
+tr:['Türkçe','🕵️ Macera','📚 Ansiklopedi','𓏏 Adın','🏛️ Başkanlar','🏙️ Şehirler','🏺 Anıtlar','🧳 Kayıp eserler','𓋹 Semboller','Hazırlayan','Arayüz çevrildi; içerik Arapçadır.']};
+const LL=()=>LG[S.lang||'ar'];
+const nav2=()=>{const l=LL();return `<div class="nav">${['game','info','name'].map((k,i)=>`<button class="tab ${S.tab==k?'active':''}" onclick="goTab('${k}')">${l[i+1]}</button>`).join('')}<button class="tab ${S.tab=='why'?'active':''}" onclick="goTab('why')">❓ ${AB[S.lang||'ar'][0]}</button><button class="tab ${S.tab=='vision'?'active':''}" onclick="goTab('vision')">🇪🇬 ${AB[S.lang||'ar'][1]}</button><select class="lang" onchange="setLang(this.value)">${Object.keys(LG).map(k=>`<option value="${k}" ${k==(S.lang||'ar')?'selected':''}>${LG[k][0]}</option>`).join('')}</select></div>`};
+const foot2=()=>`<p class="small-mut" style="text-align:center;margin-top:24px">${LL()[9]}: جنى أحمد محمود عبدالرحيم عبدالله<br>${LL()[10]}</p>`;
+function setLang(v){S.lang=v;document.documentElement.dir=v=='ar'?'rtl':'ltr';document.documentElement.lang=v;goTab(S.tab);}
+function shell(h){clearInterval(S.tm);$('#app').innerHTML=bar()+`<h1>شفرة النيل <span class="hg">𓂀</span></h1>`+nav2()+h+foot2();}
+function home(){S.tab='game';homeBase();$('#app h1').insertAdjacentHTML('afterend',nav2());$('#app').insertAdjacentHTML('beforeend',foot2());}
+function info(s){S.tab='info';s=s||S.sec||'p';S.sec=s;const l=LL();
+ const R={p:PRES.map(p=>`<details class="gen" style="--c:#ffc300" ${p[0]=='حسني مبارك'?'':''}><summary><b>${p[0]}</b> <span class="small-mut">(${p[1]})</span></summary><div class="gb"><span class="badge">⏳ ${p[2]}</span><p>${p[3]}</p></div></details>`),
+ c:CIT2.map((g,i)=>`<details class="gen" style="--c:${g[2]}" ${i==3?'open':''}><summary>${g[3]} <b>${g[0]}</b> <span class="small-mut">— ${g[1]}</span></summary><div class="gb">${g[4].split('|').map(c=>`<span class="chip2" style="--c:${g[2]}">${c}</span>`).join('')}</div></details>`),
+ a:['<p class="small-mut"><span class="dot" style="--c:'+F+'"></span>فرعوني <span class="dot" style="--c:'+G+'"></span>يوناني روماني <span class="dot" style="--c:'+K+'"></span>قبطي <span class="dot" style="--c:'+I+'"></span>إسلامي <span class="dot" style="--c:'+M+'"></span>حديث</p>'].concat(ANT2.map(r=>`<details class="gen" style="--c:${r[3]}"><summary><b>${r[0]}</b></summary><div class="gb"><span class="badge">🏗️ ${r[1]}</span><p>${r[2]}</p></div></details>`)),
+ s:STL.map(r=>`<details class="gen" style="--c:#ff4d6d"><summary><b>${r[0]}</b></summary><div class="gb"><span class="badge">📍 ${r[1]}</span><p>${r[2]}</p></div></details>`),
+ g:GL.map(p=>`<div class="info-item" style="display:flex;gap:14px;align-items:center"><span class="hg" style="font-size:2.2rem">${p[0]}</span><div><b>${p[1]}</b> — ${p[2]}</div></div>`)};
+ const T={p:l[4],c:l[5],a:l[6],s:l[7],g:l[8]};
+ shell(`<div class="card"><div class="row">${Object.keys(T).map(k=>`<button class="tab ${s==k?'active':''}" onclick="info('${k}')">${T[k]}</button>`).join('')}</div>${R[s].join('')}</div>`);}
+ANT2.push(
+['أهرام أبو صير','ملوك الأسرة الخامسة (ساحورع ونفر إر كا رع ونيوسر رع) – الجيزة','جبانة ملكية أصغر حجماً من أهرام الجيزة، وفيها معابد مزينة بنقوش رائعة.',F],
+['الهرم الأحمر (دهشور)','الملك سنفرو – الأسرة الرابعة – الجيزة','أول هرم حقيقي أملس الجوانب في التاريخ، سُمي بلون حجره المحمر.',F],
+['هرم ميدوم (بني سويف)','بدأه الملك حوني وأتمه سنفرو – الأسرة الثالثة والرابعة','يبدو كبرج عالٍ لانهيار أجزاء من غلافه عبر القرون.',F],
+['هرما هوارة واللاهون (الفيوم)','أمنحمات الثالث (هوارة) وسنوسرت الثاني (اللاهون) – الدولة الوسطى','هرمان من الطوب اللبن في الفيوم، ويُعرف حول هوارة «اللابيرنث» الذي وصفه المؤرخون القدماء.',F],
+['مدينة ماضي (الفيوم)','أمنحمات الثالث وأُضيف إليها في العصر البطلمي','معبد للإلهة رنوتت إلهة الحصاد، وهو من المعابد القليلة المحفوظة في الدولة الوسطى.',F],
+['صان الحجر (تانيس) – الشرقية','ملوك الأسرتين 21 و22','عاصمة مصر في فترة من العصور المتأخرة، وفيها مقابر ملكية وتماثيل ضخمة.',F],
+['تل بسطة (الزقازيق)','ملوك الأسرة 22 وقبلهم الدولة القديمة','موقع معبد الإلهة القطة باستت، وعاصمة مصر في عهد الأسرة 22.',F],
+['بهبيت الحجارة (الغربية)','الملك نخت نبو الثاني ثم البطالمة','معبد ضخم للإلهة إيزيس انهار بفعل الزلازل وتناثرت أحجاره الجرانيتية.',F],
+['تل الفراعين – بوتو (كفر الشيخ)','عاصمة مصر السفلى قبل توحيد القطرين','من أقدم مدن الدلتا، وكانت مركز عبادة الإلهة واجت.',F],
+['سرابيط الخادم (سيناء)','ملوك الدولة الوسطى والحديثة','معبد للإلهة حتحور على قمة جبل ومناجم فيروز استغلها المصريون القدماء.',F],
+['بني حسن وتونة الجبل (المنيا)','نبلاء الدولة الوسطى (بني حسن) – والفترة البطلمية والرومانية (تونة الجبل)','مقابر منحوتة في الصخر بنقوش تصور الحياة اليومية، ومقبرة بتوزيريس بتونة الجبل.',F],
+['مقابر مير (أسيوط)','نبلاء الدولة القديمة والوسطى','مقابر حاكم الإقليم مير وعائلته بنقوش ملونة محفوظة جيداً.',F],
+['وادي الملكات والرامسيوم ومدينة هابو (الأقصر)','ملكات الدولة الحديثة، ورمسيس الثاني (الرامسيوم)، ورمسيس الثالث (هابو)','فيها مقبرة الملكة نفرتاري، ومعبدا رمسيس الثاني والثالث الجنائزيان.',F],
+['تمثالا ممنون (الأقصر)','الملك أمنحتب الثالث – الأسرة 18','تمثالان ضخمان للملك كانا يقفان أمام معبده الجنائزي.',F],
+['المسلة الناقصة وجزيرة إلفنتين (أسوان)','الملكة حتشبسوت (المسلة) – والدولة القديمة (إلفنتين)','مسلة تشققت في المحجر فتُركت، وإلفنتين حصن الحدود الجنوبية ومعبد خنوم ومقياس النيل.',F],
+['مقابر النبلاء (أسوان)','حكام الجنوب في الدولة القديمة والوسطى','مقابر منحوتة في الجبل غرب النيل تقابل مدينة أسوان.',F],
+['معبد بسيوة وجبل الموتى','الأسرة 26 (معبد آمون) – وعصور متأخرة وبطلمية ورومانية','معبد التنبؤات الذي زاره الإسكندر الأكبر، وجبل الموتى مقابر منحوتة في الصخر.',F],
+['معبد هيبس ومقابر البجوات (الخارجة)','الفترة المتأخرة الفارسية (هيبس) – ومسيحيون أوائل (البجوات)','هيبس معبد لآمون، والبجوات من أقدم مقابر المسيحيين بمصر.',K],
+['المسرح الروماني ومعبد الرأس السوداء والمتحف اليوناني الروماني (الإسكندرية)','العصر الروماني – والمتحف أُنشئ عام 1892','مسرح كوم الدكة الروماني، ومعبد للإلهة إيزيس، ومتحف يضم قطعاً يونانية رومانية.',G],
+['قلعة صلاح الدين بجزيرة فرعون (طابا)','صلاح الدين الأيوبي – القرن 12','قلعة على جزيرة صغيرة في خليج العقبة لحماية الطريق.',I],
+['الدير الأبيض والدير الأحمر (سوهاج)','الأنبا شنودة والأنبا بيشاي – القرن الخامس','ديران قبطيان بكنيستين ضخمتين من الحجر.',K],
+['الدير المحرق (أسيوط)','الطائفة القبطية','تقول التقاليد القبطية إن العائلة المقدسة مكثت بالمنطقة قرابة ستة أشهر.',K],
+['كنيسة أبي سرجة ومعبد بن عزرا (مصر القديمة)','الطائفة القبطية والجالية اليهودية','تقاليد قبطية تربط الكنيسة بمرور العائلة المقدسة، والمعبد من أقدم المعابد اليهودية بمصر.',K],
+['شارع المعز','الفاطميون منذ 969م','من أكبر تجمعات الآثار الإسلامية المفتوحة في العالم.',I],
+['مسجد الرفاعي (القاهرة)','الأميرة خوشيار هانم – 1869 وانتهى 1912','مسجد ضخم بالقرب من القلعة يضم أضرحة أسرة محمد علي.',I],
+['مسجد المرسي أبو العباس (الإسكندرية)','المعماري ماريو روسي – 1943 إلى 1945','يحمل اسم الولي أبو العباس المرسي، وبُني على طراز عمارة إسلامية مهيبة.',I],
+['قصر عابدين وقصر المنيل وقصر البارون وقصر المنتزه','الخديو إسماعيل (عابدين 1863) – الأمير محمد علي توفيق (المنيل) – البارون إمبان (1907) – الخديو عباس حلمي (المنتزه 1892)','قصور من العصر الحديث تجمع الطرز المعمارية الأوروبية والشرقية.',M],
+['المتحف المصري بالتحرير','افتُتح عام 1902 – المعماري مارسيل دورنيون','يضم كنوز توت عنخ آمون ومئات الآلاف من القطع.',M],
+['المتحف القبطي ومتحف الفن الإسلامي','مرقس سميكة باشا (1910) ومتحف الفن الإسلامي (1903)','يعرضان الفنون القبطية والإسلامية من أنحاء مصر.',M]);
+const Q=id=>CASES.find(c=>c.id==id).q;
+Q('a').push(
+{k:'match',q:'🧩 طابق الأثر بمن بناه: اضغط الأثر ثم بانيه',p:[['الهرم الأكبر','خوفو'],['أبو سمبل','رمسيس الثاني'],['معبد الدير البحري','حتشبسوت'],['تل العمارنة','إخناتون']],e:'خوفو للهرم الأكبر، ورمسيس لأبو سمبل، وحتشبسوت للدير البحري، وإخناتون للعمارنة.'},
+{k:'mc',q:'🕵️ اكشف المحتال! واحدة من هذه العبارات خاطئة:',o:['الهرم الأكبر بناه خوفو','أبو سمبل في أسوان','قلعة صلاح الدين بناها الفاطميون','الكنيسة المعلقة في مصر القديمة'],a:2,e:'القلعة بناها صلاح الدين الأيوبي نحو 1176م.'});
+Q('b').push(
+{k:'match',q:'🗺️ طابق المدينة بجيلها',p:[['العاشر من رمضان','الجيل الأول'],['بدر','الجيل الثاني'],['القاهرة الجديدة','الجيل الثالث'],['العلمين الجديدة','الجيل الرابع']],e:'تصنيف هيئة المجتمعات العمرانية الجديدة.'},
+{k:'mc',q:'⚡ صح أم خطأ؟ «المنصورة الجديدة تطل على البحر المتوسط»',o:['صح ✅','خطأ ❌'],a:0,e:'صحيح، تقع على ساحل المتوسط بالدقهلية.'});
+Q('c').push(
+{k:'clue',c:['وُلدت في الإسكندرية وكنت ضابطاً بالجيش','أمّمت قناة السويس عام 1956','بدأ بناء السد العالي في عهدي'],o:['جمال عبد الناصر','أنور السادات','حسني مبارك','محمد نجيب'],a:0,e:'هذا هو جمال عبد الناصر.',q:'من أنا؟'},
+{k:'match',q:'🔗 طابق الرئيس بالحدث',p:[['السادات','حرب أكتوبر 1973'],['عبد الناصر','تأميم القناة'],['مبارك','عودة طابا 1989'],['السيسي','قناة السويس الجديدة']],e:'لكل رئيس محطة بارزة في تاريخ مصر الحديث.'});
+Q('d').push(
+{k:'match',hg:1,q:'𓋹 طابق الرمز بمعناه',p:[['𓋹','الحياة'],['𓂀','الحماية'],['𓆣','البعث والتجدد'],['𓇳','الشمس']],e:'عنخ = حياة، عين حورس = حماية، الجعران = بعث، القرص = شمس.'});
+CASES.push({id:'z',ic:'🔓',t:'القضية الأخيرة: خزنة النيل',d:'تحدٍ مختلط من كل القضايا – تفتح بعد الأربع',q:[]});
+const startO=start;
+start=function(id){S.lv={f:1,t:1};
+ if(id=='z'){if(Object.keys(S.seals).filter(k=>k!='z').length<4){$('.nav').insertAdjacentHTML('afterend','<div class="card">🔒 أنهِ القضايا الأربع أولاً لتفتح الخزنة!</div>');return;}
+  CASES.find(x=>x.id=='z').q=sh(CASES.filter(c=>c.id!='z').flatMap(c=>c.q).filter(q=>q.k=='mc'||q.k=='clue')).slice(0,6);}
+ startO(id);};
+const askO=ask;
+ask=function(){
+ if(S.i>=S.c.q.length)return askO();
+ const q=S.c.q[S.i];
+ if(q.k=='match'){S.lock=false;S.cl=1;S.left=30;S.mm={s:null,n:0,w:0};
+  const r=sh(q.p.map(x=>x[1]));
+  $('#app').innerHTML=bar()+`<div class="card"><div class="top"><span>${S.c.t.split(':')[1]}</span><span>سؤال ${S.i+1}/${S.c.q.length}</span></div><div class="bar" style="margin:8px 0"><i id="tb"></i></div><h2>${q.q}</h2><div class="row" style="align-items:flex-start"><div style="flex:1" id="ml">${q.p.map((x,i)=>`<button class="opt" onclick="mL(${i},this)">${q.hg?`<span class="hg glyph">${x[0]}</span>`:x[0]}</button>`).join('')}</div><div style="flex:1" id="mr">${r.map(t=>`<button class="opt" onclick="mR(this)">${t}</button>`).join('')}</div></div><div id="fb"></div></div>`;
+  tmr();}
+ else askO();
+ $('#app').insertAdjacentHTML('afterbegin','<button class="btn alt" style="margin-bottom:8px" onclick="exitGame()">✖ خروج من المغامرة</button>');
+ if(S.lock)return;
+ const v=S.lv||(S.lv={f:1,t:1});
+ $('#fb').insertAdjacentHTML('beforebegin',`<div class="row"><button class="chip" id="lf" onclick="fifty()" ${v.f&&(q.k=='mc'||q.k=='clue')?'':'disabled'}>✂️ 50:50</button><button class="chip" id="lt" onclick="freeze()" ${v.t?'':'disabled'}>⏳ +10 ثوانٍ</button></div>`);
+};
+function tmr(){clearInterval(S.tm);S.tm=setInterval(()=>{S.left-=.25;const t=$('#tb');if(t)t.style.width=Math.max(S.left/30*100,0)+'%';if(S.left<=0)done(false);},250);}
+function mL(i,b){if(S.lock||b.disabled)return;document.querySelectorAll('#ml .opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');S.mm.s={i,b};}
+function mR(b){const m=S.mm;if(S.lock||!m.s||b.disabled)return;const q=S.c.q[S.i];
+ if(q.p[m.s.i][1]==b.textContent){[m.s.b,b].forEach(x=>{x.classList.remove('sel');x.classList.add('g');x.disabled=true});m.s=null;if(++m.n==q.p.length)done(m.w<=1);}
+ else{m.w++;b.classList.add('b');setTimeout(()=>b.classList.remove('b'),500);}}
+function fifty(){const v=S.lv;if(S.lock||!v.f)return;const q=S.c.q[S.i];if(q.k!='mc'&&q.k!='clue')return;v.f=0;$('#lf').disabled=true;let n=0;
+ document.querySelectorAll('.opt').forEach((b,i)=>{if(S.opts[i][1]!=q.a&&n<2){n++;b.style.visibility='hidden';b.disabled=true;}});}
+function exitGame(){clearInterval(S.tm);home();}
+function freeze(){const v=S.lv;if(S.lock||!v.t)return;v.t=0;$('#lt').disabled=true;S.left=Math.min(S.left+10,40);}
+const st=document.createElement('style');st.textContent='.opt.sel{border-color:#ffc300;box-shadow:0 0 12px rgba(255,195,0,.5)}.opt:disabled{opacity:.75}';document.head.appendChild(st);
+function about(w){S.tab=w||'why';
+ const pil=[['البُعد الاقتصادي','#ffc300','التنمية الاقتصادية • الطاقة • المعرفة والابتكار والبحث العلمي • الشفافية وكفاءة المؤسسات الحكومية'],['البُعد الاجتماعي','#2ec4b6','العدالة الاجتماعية • الصحة • التعليم والتدريب • الثقافة'],['البُعد البيئي','#a06cd5','البيئة • التنمية العمرانية']];
+ const lk=[['🏺 الثقافة والهوية','قضيتا الآثار والهيروغليفية تقرّبان من حضارتنا وتعززان الانتماء.'],['🎓 التعليم والتدريب','تعلّم باللعب والألغاز بدل الحفظ التقليدي.'],['💡 الابتكار والتحول الرقمي','منصة ويب تفاعلية صنعها مبدع صغير تعمل على الهاتف والكمبيوتر.'],['🏙️ التنمية العمرانية','قضية المدن الجديدة تعرّف بأجيال العمران من الأول إلى الرابع.']];
+ shell(`<div class="card"><h2>❓ ليه عملتُ موقع «شفرة النيل»؟</h2>
+ <p>عملتُ الموقع لأنني لاحظت أن كثيرين من جيلنا (12 إلى 18 سنة) يعرفون معلومات متفرقة عن مصر، لكنهم أحياناً يجدون القراءة التقليدية مملّة وبعيدة عن جوّهم اليومي، بينما يرتبطون أكثر بالألعاب والتحديات والتجربة التفاعلية. أردتُ مساحة تجمع المتعة والوعي والمعرفة في مكان واحد:</p>
+ <div class="clue">أن يكتشف الطالب آثار مصر بكل عصورها ومعالمها، ومدنها الجديدة، ورؤساء جمهوريتها ومدد حكمهم وأبرز محطاتهم، ورموز الهيروغليفية بأسلوب تحقيق ومغامرة.</div>
+ <div class="clue">أن يجد من يبحث عن المعلومة مرجعاً واضحاً ومنظماً، وأن يجرّب بنفسه كتابة اسمه ليتحوّل إلى رموز هيروغليفية داخل خرطوش ملكي.</div>
+ <div class="clue">والأهم بالنسبة لي: أن أُظهر جمال هويتنا المصرية وأربط ماضيها العريق بحاضرها ومستقبلها بلغة قريبة من جيلنا تليق بجائزة الدولة للمبدع الصغير.</div></div>
+ <div class="card"><h2>🇪🇬 رؤية مصر 2030</h2>
+ <p>هي استراتيجية التنمية المستدامة لمصر، أُطلقت يوم 24 فبراير 2016 خلال احتفالات «عام الشباب»، بعد إعداد استمر نحو عامين منذ 2014. تهدف إلى مصر باقتصاد تنافسي متوازن قائم على المعرفة والابتكار، وتنسجم مع أهداف الأمم المتحدة للتنمية المستدامة. وصدرت نسخة مُحدّثة عام 2023 أضافت مُمكّنات مثل التكنولوجيا والابتكار والتحول الرقمي.</p>
+ <p class="small-mut">أبعادها الثلاثة ومحاورها في نسختها الأولى:</p>
+ ${pil.map(p=>`<details class="gen" style="--c:${p[1]}"><summary><b>${p[0]}</b></summary><div class="gb"><p>${p[2]}</p></div></details>`).join('')}
+ <h2 style="margin-top:18px">🔗 كيف تخدم «شفرة النيل» هذه الرؤية؟</h2>
+ ${lk.map(p=>`<div class="info-item"><b>${p[0]}</b><p style="margin:2px 0 0">${p[1]}</p></div>`).join('')}
+ <p class="small-mut">المصدر: وثائق وزارة التخطيط والتنمية الاقتصادية المصرية لرؤية مصر 2030.</p></div>`);
+ document.querySelectorAll('#app .card')[S.tab=='vision'?0:1].remove();}
+const AB={ar:['ليه عملت الموقع؟','رؤية مصر 2030'],
+en:['Why I made it','Egypt Vision 2030','','','', 'Why did I build “Nile Code”?','',0,0,0,0,0],
+fr:[],es:[],de:[],tr:[]};
+AB.en=['Why I made this site','Egypt Vision 2030','Why did I build “Nile Code”?','I noticed that many people my age (12–18) know scattered facts about Egypt but often find traditional reading boring and far from their daily world, while they love games, challenges and interactive experiences. I wanted one place that combines fun, awareness and knowledge:',['Let students discover Egypt’s monuments of every era, its new cities, the presidents of the Republic with their terms and key moments, and hieroglyphic symbols — through an investigation-and-adventure style.','Give anyone looking for information a clear, organized reference, and let them write their own name in hieroglyphs inside a royal cartouche.','Most importantly: show the beauty of Egyptian identity and link its ancient past to its present and future in a language close to our generation, worthy of the State Award for the Young Creator.'],'Egypt Vision 2030','Egypt’s sustainable development strategy, launched on 24 February 2016 during the “Year of Youth” after about two years of preparation. It aims for a competitive, balanced economy based on knowledge and innovation, in line with the UN Sustainable Development Goals. An updated version issued in 2023 added enablers such as technology, innovation and digital transformation.','Its three dimensions and pillars in the first version:',[['Economic','Economic development • Energy • Knowledge, innovation and scientific research • Transparency and efficiency of public institutions'],['Social','Social justice • Health • Education and training • Culture'],['Environmental','Environment • Urban development']],'How does “Nile Code” serve this vision?',[['🏺 Culture and identity','The Monuments and Hieroglyphs cases bring our civilization closer and strengthen belonging.'],['🎓 Education and training','Learning through play and puzzles instead of rote memorization.'],['💡 Innovation and digital transformation','An interactive web platform built by a young creator that works on phones and computers.'],['🏙️ Urban development','The New Cities case introduces the generations of Egypt’s new urban communities.']],'Source: Egypt’s Ministry of Planning and Economic Development documents on Egypt Vision 2030.'];
+AB.fr=['Pourquoi ce site','Vision Égypte 2030','Pourquoi ai-je créé « Code du Nil » ?','J’ai remarqué que beaucoup de jeunes de mon âge (12–18 ans) connaissent des informations éparses sur l’Égypte, mais trouvent la lecture classique ennuyeuse et éloignée de leur quotidien, alors qu’ils aiment les jeux, les défis et l’interactivité. Je voulais un lieu unique qui réunit plaisir, sensibilisation et savoir :',['Faire découvrir les monuments égyptiens de toutes les époques, les villes nouvelles, les présidents de la République avec la durée de leur mandat et leurs moments clés, et les symboles hiéroglyphiques, sous forme d’enquête et d’aventure.','Offrir une référence claire et organisée à ceux qui cherchent une information, et permettre d’écrire son nom en hiéroglyphes dans un cartouche royal.','Surtout : montrer la beauté de l’identité égyptienne et relier son passé à son présent et son avenir dans un langage proche de notre génération, digne du Prix d’État du Jeune Créateur.'],'Vision Égypte 2030','Stratégie de développement durable de l’Égypte, lancée le 24 février 2016 pendant l’« Année de la jeunesse » après environ deux ans de préparation. Elle vise une économie compétitive et équilibrée fondée sur le savoir et l’innovation, en phase avec les Objectifs de développement durable de l’ONU. Une version actualisée de 2023 ajoute des leviers comme la technologie, l’innovation et la transformation numérique.','Ses trois dimensions et piliers dans la première version :',[['Économique','Développement économique • Énergie • Savoir, innovation et recherche scientifique • Transparence et efficacité des institutions publiques'],['Social','Justice sociale • Santé • Éducation et formation • Culture'],['Environnemental','Environnement • Développement urbain']],'Comment « Code du Nil » sert-il cette vision ?',[['🏺 Culture et identité','Les enquêtes sur les monuments et les hiéroglyphes rapprochent de notre civilisation et renforcent l’appartenance.'],['🎓 Éducation et formation','Apprendre par le jeu et les énigmes plutôt que par cœur.'],['💡 Innovation et transformation numérique','Une plateforme web interactive créée par un jeune créateur, utilisable sur téléphone et ordinateur.'],['🏙️ Développement urbain','L’enquête sur les villes nouvelles présente les générations de villes nouvelles d’Égypte.']],'Source : documents du ministère égyptien de la Planification et du Développement économique sur la Vision 2030.'];
+AB.es=['Por qué hice el sitio','Visión Egipto 2030','¿Por qué creé «Código del Nilo»?','Noté que muchos jóvenes de mi edad (12–18 años) conocen datos sueltos sobre Egipto, pero encuentran aburrida la lectura tradicional y lejana a su día a día, mientras que les encantan los juegos, los desafíos y las experiencias interactivas. Quise un solo lugar que una diversión, conciencia y conocimiento:',['Que el estudiante descubra los monumentos de Egipto de todas las épocas, sus ciudades nuevas, los presidentes de la República con la duración de sus mandatos y sus hitos, y los símbolos jeroglíficos, con estilo de investigación y aventura.','Ofrecer una referencia clara y ordenada a quien busca información, y permitir escribir su nombre en jeroglíficos dentro de un cartucho real.','Lo más importante: mostrar la belleza de la identidad egipcia y unir su pasado con su presente y futuro en un lenguaje cercano a nuestra generación, digno del Premio Estatal al Joven Creador.'],'Visión Egipto 2030','Estrategia de desarrollo sostenible de Egipto, lanzada el 24 de febrero de 2016 durante el «Año de la Juventud» tras unos dos años de preparación. Busca una economía competitiva y equilibrada basada en el conocimiento y la innovación, en línea con los Objetivos de Desarrollo Sostenible de la ONU. Una versión actualizada de 2023 añade facilitadores como tecnología, innovación y transformación digital.','Sus tres dimensiones y pilares en la primera versión:',[['Económica','Desarrollo económico • Energía • Conocimiento, innovación e investigación científica • Transparencia y eficiencia de las instituciones públicas'],['Social','Justicia social • Salud • Educación y formación • Cultura'],['Ambiental','Medio ambiente • Desarrollo urbano']],'¿Cómo sirve «Código del Nilo» a esta visión?',[['🏺 Cultura e identidad','Los casos de monumentos y jeroglíficos acercan nuestra civilización y refuerzan el sentido de pertenencia.'],['🎓 Educación y formación','Aprender jugando y resolviendo enigmas en lugar de memorizar.'],['💡 Innovación y transformación digital','Una plataforma web interactiva creada por un joven creador, que funciona en móvil y ordenador.'],['🏙️ Desarrollo urbano','El caso de las Ciudades Nuevas presenta las generaciones de nuevas ciudades de Egipto.']],'Fuente: documentos del Ministerio de Planificación y Desarrollo Económico de Egipto sobre la Visión 2030.'];
+AB.de=['Warum ich die Seite gemacht habe','Vision Ägypten 2030','Warum habe ich „Nil-Code“ gebaut?','Mir ist aufgefallen, dass viele in meinem Alter (12–18) verstreute Fakten über Ägypten kennen, klassisches Lesen aber langweilig und weit weg vom Alltag finden, während sie Spiele, Herausforderungen und interaktive Erlebnisse lieben. Ich wollte einen Ort, der Spaß, Bewusstsein und Wissen verbindet:',['Schüler sollen Ägyptens Denkmäler aller Epochen, die neuen Städte, die Präsidenten der Republik mit Amtszeiten und wichtigen Stationen sowie Hieroglyphen entdecken – als Ermittlung und Abenteuer.','Wer Informationen sucht, findet ein klares, geordnetes Nachschlagewerk und kann seinen Namen in Hieroglyphen in einer königlichen Kartusche schreiben.','Am wichtigsten: die Schönheit der ägyptischen Identität zeigen und ihre Vergangenheit mit Gegenwart und Zukunft verbinden – in einer Sprache nahe unserer Generation und des Staatspreises für junge Kreative würdig.'],'Vision Ägypten 2030','Ägyptens Strategie für nachhaltige Entwicklung, am 24. Februar 2016 im „Jahr der Jugend“ nach rund zwei Jahren Vorbereitung gestartet. Ziel ist eine wettbewerbsfähige, ausgewogene Wirtschaft auf Basis von Wissen und Innovation, im Einklang mit den UN-Nachhaltigkeitszielen. Eine aktualisierte Fassung von 2023 ergänzt Wegbereiter wie Technologie, Innovation und digitale Transformation.','Ihre drei Dimensionen und Säulen in der ersten Fassung:',[['Wirtschaftlich','Wirtschaftsentwicklung • Energie • Wissen, Innovation und Forschung • Transparenz und Effizienz der Institutionen'],['Sozial','Soziale Gerechtigkeit • Gesundheit • Bildung und Ausbildung • Kultur'],['Ökologisch','Umwelt • Stadtentwicklung']],'Wie dient „Nil-Code“ dieser Vision?',[['🏺 Kultur und Identität','Die Fälle zu Denkmälern und Hieroglyphen bringen unsere Zivilisation näher und stärken die Zugehörigkeit.'],['🎓 Bildung und Ausbildung','Lernen durch Spiel und Rätsel statt Auswendiglernen.'],['💡 Innovation und digitale Transformation','Eine interaktive Webplattform eines jungen Kreativen, die auf Handy und Computer läuft.'],['🏙️ Stadtentwicklung','Der Fall „Neue Städte“ stellt die Generationen ägyptischer Neugründungen vor.']],'Quelle: Dokumente des ägyptischen Ministeriums für Planung und Wirtschaftsentwicklung zur Vision 2030.'];
+AB.tr=['Siteyi neden yaptım','Mısır Vizyonu 2030','“Nil Şifresi”i neden yaptım?','Benim yaşımdaki (12–18) pek çok kişinin Mısır hakkında dağınık bilgiler bildiğini ama geleneksel okumayı sıkıcı ve günlük hayattan uzak bulduğunu, oyunları, meydan okumaları ve etkileşimli deneyimleri ise sevdiğini fark ettim. Eğlenceyi, farkındalığı ve bilgiyi tek yerde buluşturmak istedim:',['Öğrenciler Mısır’ın her döneme ait anıtlarını, yeni şehirlerini, cumhurbaşkanlarını görev süreleri ve önemli dönemeçleriyle ve hiyeroglif sembollerini soruşturma ve macera tarzıyla keşfetsin.','Bilgi arayanlar net ve düzenli bir kaynak bulsun, kendi isimlerini kraliyet kartuşunda hiyeroglifle yazabilsin.','En önemlisi: Mısır kimliğinin güzelliğini göstermek, kadim geçmişini bugünü ve geleceğiyle kuşağımıza yakın bir dille bağlamak.'],'Mısır Vizyonu 2030','Mısır’ın sürdürülebilir kalkınma stratejisi; yaklaşık iki yıllık hazırlıktan sonra 24 Şubat 2016’da “Gençlik Yılı” sırasında başlatıldı. Bilgi ve yeniliğe dayalı, rekabetçi ve dengeli bir ekonomiyi hedefler; BM Sürdürülebilir Kalkınma Hedefleriyle uyumludur. 2023’te yayımlanan güncel sürüm teknoloji, yenilik ve dijital dönüşüm gibi destekleyicileri ekledi.','İlk sürümdeki üç boyutu ve sütunları:',[['Ekonomik','Ekonomik kalkınma • Enerji • Bilgi, yenilik ve bilimsel araştırma • Kamu kurumlarında şeffaflık ve verimlilik'],['Sosyal','Sosyal adalet • Sağlık • Eğitim ve öğretim • Kültür'],['Çevresel','Çevre • Kentsel kalkınma']],'“Nil Şifresi” bu vizyona nasıl hizmet ediyor?',[['🏺 Kültür ve kimlik','Anıtlar ve hiyeroglif bölümleri uygarlığımızı yakınlaştırır, aidiyeti pekiştirir.'],['🎓 Eğitim ve öğretim','Ezber yerine oyun ve bulmacayla öğrenme.'],['💡 Yenilik ve dijital dönüşüm','Genç bir yaratıcının yaptığı, telefonda ve bilgisayarda çalışan etkileşimli web platformu.'],['🏙️ Kentsel kalkınma','Yeni Şehirler bölümü Mısır’ın yeni şehir nesillerini tanıtır.']],'Kaynak: Mısır Planlama ve Ekonomik Kalkınma Bakanlığının Vizyon 2030 belgeleri.'];
+const aboutAr=about;
+about=function(w){const l=S.lang||'ar';if(l=='ar')return aboutAr(w);const T=AB[l];S.tab=w||'why';
+ shell(S.tab=='vision'?`<div class="card"><h2>🇪🇬 ${T[5]}</h2><p>${T[6]}</p><p class="small-mut">${T[7]}</p>${T[8].map((p,i)=>`<details class="gen" style="--c:${['#ffc300','#2ec4b6','#a06cd5'][i]}"><summary><b>${p[0]}</b></summary><div class="gb"><p>${p[1]}</p></div></details>`).join('')}<h2 style="margin-top:18px">🔗 ${T[9]}</h2>${T[10].map(p=>`<div class="info-item"><b>${p[0]}</b><p style="margin:2px 0 0">${p[1]}</p></div>`).join('')}<p class="small-mut">${T[11]}</p></div>`:`<div class="card"><h2>❓ ${T[2]}</h2><p>${T[3]}</p>${T[4].map(b=>`<div class="clue">${b}</div>`).join('')}</div>`);};
+home();
+</script>
+</body>
+</html>
